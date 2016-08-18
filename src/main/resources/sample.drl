@@ -1,0 +1,19 @@
+package org.allen.drools
+
+dialect  "mvel"
+
+rule "Rule1"
+    salience 90
+    when
+        eval(true)
+    then
+        System.out.println("hit Rule1");
+end
+
+rule "Rule2"
+    salience 100
+    when
+        eval(true)
+    then
+        System.out.println("hit Rule2");
+end
