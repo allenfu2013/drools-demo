@@ -1,0 +1,12 @@
+package org.allen.drools
+
+import org.allen.drools.domain.Message;
+
+global java.util.List messageList;
+
+rule "Hello World"
+    when
+        m : Message(status == Message.HELLO)
+    then
+       messageList.add(m);
+end

@@ -10,21 +10,24 @@ import org.kie.internal.builder.KnowledgeBuilderError;
 import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
-import org.kie.internal.logger.KnowledgeRuntimeLogger;
-import org.kie.internal.logger.KnowledgeRuntimeLoggerFactory;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Sample {
 
     public static void main(final String[] args) throws Exception {
-        KnowledgeBase kbase = readKnowledgeBase();
+        sample();
+        sample2();
+    }
+
+    public static void sample() throws Exception {
+        KnowledgeBase kbase = readKnowledgeBase("sample.drl");
         //创建会话
         StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
-
-        KnowledgeRuntimeLogger logger = KnowledgeRuntimeLoggerFactory.newFileLogger(ksession, "Sample");
         Message message = new Message();
         message.setMessage("Hello World");
         message.setStatus(Message.HELLO);
@@ -32,11 +35,34 @@ public class Sample {
         ksession.fireAllRules();//执行规则
     }
 
-    private static KnowledgeBase readKnowledgeBase() throws Exception {
+    public static void sample2() throws Exception {
+        KnowledgeBase kbase = readKnowledgeBase("sample2.drl");
+        //创建会话
+        StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        List<Message> messageList = new ArrayList<Message>();
+        ksession.setGlobal("messageList", messageList);
+
+        Message message = new Message();
+        message.setMessage("Hello World");
+        message.setStatus(Message.GOODBYE);
+        ksession.insert(message);//插入
+        ksession.fireAllRules();//执行规则
+
+        System.out.println("messageList size=" + messageList.size());
+
+        Message message1 = new Message();
+        message1.setStatus(Message.HELLO);
+        ksession.insert(message1);
+        ksession.fireAllRules();
+
+        System.out.println("messageList size=" + messageList.size());
+    }
+
+    private static KnowledgeBase readKnowledgeBase(String fileName) throws Exception {
         // 创建规则构建器
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         // 加载规则文件，并增加到构建器
-        kbuilder.add(ResourceFactory.newClassPathResource("sample.drl", Sample.class), ResourceType.DRL);
+        kbuilder.add(ResourceFactory.newClassPathResource(fileName, Sample.class), ResourceType.DRL);
         // 加载规则文本
         // kbuilder.add(ResourceFactory.newReaderResource(new StringReader("ruleText")), ResourceType.DRL);
 
