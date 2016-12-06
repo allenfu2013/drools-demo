@@ -1,53 +1,61 @@
 package org.allen.drools.demo;
 
+import org.allen.drools.domain.Message;
+import org.kie.api.io.Resource;
 import org.kie.api.io.ResourceType;
 import org.kie.internal.KnowledgeBase;
 import org.kie.internal.KnowledgeBaseFactory;
 import org.kie.internal.builder.KnowledgeBuilder;
+import org.kie.internal.builder.KnowledgeBuilderError;
+import org.kie.internal.builder.KnowledgeBuilderErrors;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
-import org.kie.internal.definition.KnowledgePackage;
 import org.kie.internal.io.ResourceFactory;
+import org.kie.internal.logger.KnowledgeRuntimeLogger;
+import org.kie.internal.logger.KnowledgeRuntimeLoggerFactory;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 
-import java.util.Collection;
+import java.io.StringReader;
+
 
 public class Sample {
-    private static KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-    private static Collection<KnowledgePackage> pkgs;
-    private static KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
-    private static StatefulKnowledgeSession ksession;
 
     public static void main(final String[] args) throws Exception {
-        initDrools();
-        fireRules();
+        KnowledgeBase kbase = readKnowledgeBase();
+        //创建会话
+        StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+
+        KnowledgeRuntimeLogger logger = KnowledgeRuntimeLoggerFactory.newFileLogger(ksession, "Sample");
+        Message message = new Message();
+        message.setMessage("Hello World");
+        message.setStatus(Message.HELLO);
+        ksession.insert(message);//插入
+        ksession.fireAllRules();//执行规则
     }
 
-    private static void initDrools() throws Exception {
-
-        long t1 = System.currentTimeMillis();
+    private static KnowledgeBase readKnowledgeBase() throws Exception {
+        // 创建规则构建器
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        // 加载规则文件，并增加到构建器
         kbuilder.add(ResourceFactory.newClassPathResource("sample.drl", Sample.class), ResourceType.DRL);
-        long t2 = System.currentTimeMillis();
-        System.out.println(t2-t1);
+        // 加载规则文本
+        // kbuilder.add(ResourceFactory.newReaderResource(new StringReader("ruleText")), ResourceType.DRL);
 
-
-        // Check the builder for errors
-        if (kbuilder.hasErrors()) {
-            System.out.println(kbuilder.getErrors().toString());
-            throw new RuntimeException("Unable to compile drl\".");
+        KnowledgeBuilderErrors errors = kbuilder.getErrors();
+        //编译规则过程中发现规则是否有错误
+        if (errors.size() > 0) {
+            for (KnowledgeBuilderError error : errors) {
+                System.out.println("规则中存在错误，错误消息如下：");
+                System.err.println(error);
+            }
+            throw new IllegalArgumentException("Could not parse knowledge.");
         }
 
-        // get the compiled packages (which are serializable)
-        pkgs = kbuilder.getKnowledgePackages();
+        // 创建规则构建库
+        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+        // 构建器加载的资源文件包放入构建库
+        kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 
-        // add the packages to a knowledgebase (deploy the knowledge packages).
-        kbase.addKnowledgePackages(pkgs);
-
-        ksession = kbase.newStatefulKnowledgeSession();
-    }
-
-    private static void fireRules() {
-        ksession.fireAllRules();
-        ksession.dispose();
+        return kbase;
     }
 
 }
