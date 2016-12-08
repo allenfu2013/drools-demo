@@ -16,7 +16,7 @@ import org.allen.drools.domain.Message;
 rule "rule1"
     salience 1 //属性部分
     when
-       //条件不符  LHS
+       //条件不符 LHS
        Message()
     then
        //结果部分 RHS
@@ -50,4 +50,8 @@ kmodule.xml文件存放在src/main/resources/META-INF/文件夹下。
 
 ## FireAllRules
 
-*
+* drools will look at all rules that can apply and put it in its agenda.
+* drools will execute the rule that is on top of its agenda
+* Once fired, the rule will be deactivated
+* We have to tell drools of a state change in one of facts in the when part (lhs) to make him reconsidering the rule.
+* A state change can be an insert, update or delete (retract).
