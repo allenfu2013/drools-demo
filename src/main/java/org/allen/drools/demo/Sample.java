@@ -1,7 +1,6 @@
 package org.allen.drools.demo;
 
 import org.allen.drools.domain.Message;
-import org.kie.api.io.Resource;
 import org.kie.api.io.ResourceType;
 import org.kie.internal.KnowledgeBase;
 import org.kie.internal.KnowledgeBaseFactory;
@@ -12,7 +11,6 @@ import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.internal.runtime.StatefulKnowledgeSession;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 

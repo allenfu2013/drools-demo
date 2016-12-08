@@ -1,0 +1,13 @@
+package org.allen.drools
+
+import org.allen.drools.domain.Message;
+
+rule "rule"
+    when
+       //LHS块
+       Message()
+    then
+       //RHS块
+       System.out.println("hello world");
+end
+
