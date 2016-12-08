@@ -5,8 +5,24 @@
 ## rule
 
 * 属性部分
-* 条件部分
-* 结果部分
+* 条件部分 LHS
+* 结果部分 RHS
+
+```xml
+package org.allen.drools
+
+import org.allen.drools.domain.Message;
+
+rule "rule1"
+    salience 1 //属性部分
+    when
+       //条件不符  LHS
+       Message()
+    then
+       //结果部分 RHS
+       System.out.println("Hello Drools");
+end
+```
 
 ## kmodule.xml
 
@@ -31,3 +47,7 @@ kmodule.xml文件存放在src/main/resources/META-INF/文件夹下。
 * 每一个ksession都有一个name，名字也可以是任意字符串，但是也不能重复。
 * kbase和ksession里面的name属性是全局不能重复的。
 * kbase和ksession中其实还有很多其它的属性
+
+## FireAllRules
+
+*
