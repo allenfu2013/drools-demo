@@ -21,7 +21,7 @@ public class Test1 {
 
     @Test
     public void test() {
-        sessionStateful = KnowledgeSessionHelper.getStatefulKnowledgeSession(kieContainer, "ksession-rules");
+        sessionStateful = KnowledgeSessionHelper.getStatefulKnowledgeSession(kieContainer, "ksession-rule");
         Message message = new Message();
         message.setStatus(Message.HELLO);
         message.setMessage("hello drools");

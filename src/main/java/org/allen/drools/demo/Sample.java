@@ -31,6 +31,7 @@ public class Sample {
         message.setStatus(Message.HELLO);
         ksession.insert(message);//插入
         ksession.fireAllRules();//执行规则
+        ksession.dispose();
     }
 
     public static void sample2() throws Exception {
@@ -52,6 +53,7 @@ public class Sample {
         message1.setStatus(Message.HELLO);
         ksession.insert(message1);
         ksession.fireAllRules();
+        ksession.dispose();
 
         System.out.println("messageList size=" + messageList.size());
     }
