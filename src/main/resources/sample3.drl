@@ -1,0 +1,65 @@
+package org.allen.drools
+
+// salience 设置规制执行的优先级，数字越大执行优先级越高
+// activation-group 若干个规则划分成一个组，当组内某个规则执行后，则组内其他规则不在执行
+// enabled 设置规制是否可用 值：true/false
+
+rule "salience-test1"
+    salience 10
+    when
+        eval(true)
+    then
+        System.out.println("salience-test1");
+end
+
+
+rule "salience-test2"
+    salience 20
+    when
+        eval(true)
+    then
+        System.out.println("salience-test2");
+end
+
+
+rule "activation-group-test1"
+    activation-group "group1"
+    when
+        eval(true)
+    then
+        System.out.println("activation-group-test1");
+end
+
+
+rule "activation-group-test2"
+    activation-group "group1"
+    when
+        eval(true)
+    then
+        System.out.println("activation-group-test2");
+end
+
+
+rule "activation-group-test3"
+    activation-group "group2"
+    when
+        eval(true)
+    then
+        System.out.println("activation-group-test3");
+end
+
+rule "enable-test1"
+    enabled false
+    when
+        eval(true)
+    then
+        System.out.println("enable-test1");
+end
+
+rule "enable-test2"
+    enabled true
+    when
+        eval(true)
+    then
+        System.out.println("enable-test2");
+end

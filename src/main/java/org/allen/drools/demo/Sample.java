@@ -18,8 +18,9 @@ import java.util.List;
 public class Sample {
 
     public static void main(final String[] args) throws Exception {
-        sample();
-        sample2();
+//        sample();
+//        sample2();
+        sample3();
     }
 
     public static void sample() throws Exception {
@@ -56,6 +57,14 @@ public class Sample {
         ksession.dispose();
 
         System.out.println("messageList size=" + messageList.size());
+    }
+
+    private static void sample3() throws Exception {
+        KnowledgeBase kbase = readKnowledgeBase("sample3.drl");
+        //创建会话
+        StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        ksession.fireAllRules();//执行规则
+        ksession.dispose();
     }
 
     private static KnowledgeBase readKnowledgeBase(String fileName) throws Exception {
